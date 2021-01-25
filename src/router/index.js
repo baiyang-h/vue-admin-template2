@@ -1,21 +1,30 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Layout from '@/layout'
 
-/* Router Modules */
-import tableRouter from "./modules/table";
-import formRouter from './modules/form'
-import nestedRouter from "./modules/nested";
+/**
+ * hidden
+ * cache
+ */
 
-const constantRoutes = [
+/* Router Modules */
+import tableRouter from './modules/table';
+import formRouter from './modules/form'
+import nestedRouter from './modules/nested';
+import cacheRouter from './modules/cache'
+
+export const constantRoutes = [
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/home',
+  },
   {
     path: '/login',
     name: 'Login',
-    hidden: true,
     component: () => import(/* webpackChunkName: "login" */ '@/views/login')
   },
   {
     path: '/redirect',
-    hidden: true,
     component: Layout,
     children: [
       {
@@ -26,13 +35,13 @@ const constantRoutes = [
     ]
   },
   {
-    path: '/',
-    component: Layout,
-    redirect: '/home',
+    path: '/404',
+    name: '404',
+    component: () => import('@/views/error-page/404')
   },
 ]
 
-const appRoutes = [
+export const appRoutes = [
   {
     path: '/home',
     redirect: '/home/index',
@@ -41,6 +50,9 @@ const appRoutes = [
       {
         path: 'index',
         name: 'Home',
+        meta: {
+          title: 'Home',
+        },
         component: () => import('@/views/home')
       }
     ]
@@ -78,10 +90,9 @@ const appRoutes = [
   },
   tableRouter,
   formRouter,
-  nestedRouter
+  nestedRouter,
+  cacheRouter
 ]
-
-console.log(appRoutes)
 
 // const routes = [
 //   ...constantRoutes,
@@ -91,7 +102,7 @@ console.log(appRoutes)
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes: constantRoutes
+  routes: [...constantRoutes, ...appRoutes]
 })
 
 export default router

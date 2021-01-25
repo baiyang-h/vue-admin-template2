@@ -1,18 +1,19 @@
 import Layout from '@/layout'
 
 export default {
-    path: '/form',
-    redirect: '/form/index',
+    path: '/cache',
+    redirect: '/cache/index',
     component: Layout,
     children: [
         {
             path: 'index',
-            name: 'Form',
+            name: 'Cache',
+            cache: true,
             meta: {
-                title: 'Form',
+                title: '缓存模块测试',
                 icon: 'el-icon-menu',
             },
-            component: () => import('@/views/form')
+            component: () => import('@/views/cache')
         }
     ]
 }

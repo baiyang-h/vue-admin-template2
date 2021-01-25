@@ -25,7 +25,7 @@
 import { reactive, getCurrentInstance } from 'vue';
 import { useStore } from 'vuex';
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
-import api from 'api';
+import {message} from "ant-design-vue";
 
 export default {
   name: 'Login',
@@ -52,10 +52,12 @@ export default {
     })
 
     async function onSubmit() {
-      let { data } = await api.user.request_login(formInline)
-      const token = data.token
-      store.dispatch('user/login', token)
-      ctx.$router.push('/')
+      try {
+        await store.dispatch('user/login', formInline);
+        ctx.$router.push('/');
+      } catch (e) {
+        message.error(e)
+      }
     }
 
     return {

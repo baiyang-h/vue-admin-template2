@@ -1,6 +1,8 @@
 const path = require('path');
 module.exports = {
 
+    lintOnSave: false,
+
     css: {
         loaderOptions: {
             scss: {
