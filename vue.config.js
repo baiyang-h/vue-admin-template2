@@ -21,7 +21,7 @@ module.exports = {
                 layout: path.resolve(__dirname, './src/layout'),
                 store: path.resolve(__dirname, './src/store'),
                 router: path.resolve(__dirname, './src/router'),
-                utils: path.resolve(__dirname, './src/utils'),
+                libs: path.resolve(__dirname, './src/libs'),
                 views: path.resolve(__dirname, './src/views'),
             },
         },

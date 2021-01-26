@@ -1,4 +1,4 @@
-import { basePost } from '@/utils/request'
+import { basePost } from '@/libs/request'
 
 export const request_dynamicTableData = data => basePost('/table/dynamic-table/getTableData', data);
 

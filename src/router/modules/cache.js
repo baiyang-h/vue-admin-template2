@@ -8,7 +8,6 @@ export default {
         {
             path: 'index',
             name: 'Cache',
-            cache: true,
             meta: {
                 title: '缓存模块测试',
                 icon: 'el-icon-menu',

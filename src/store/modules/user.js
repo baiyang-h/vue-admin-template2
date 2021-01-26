@@ -1,4 +1,4 @@
-import { getToken, setToken } from '@/utils/token'
+import { getToken, setToken } from '@/libs/token'
 import api from '@/api';
 
 const state = {

@@ -1,4 +1,4 @@
-import request, { basePost } from '@/utils/request'
+import request, { basePost } from '@/libs/request'
 
 // 登录，获取token
 export const request_login = data => basePost('/user/login', data);

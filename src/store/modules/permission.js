@@ -7,9 +7,9 @@ import router, { constantRoutes, appRoutes } from '@/router'
  * @returns {boolean|*}
  */
 function hasPermission(roles, route) {
-    if(route.meta && route.meta.roles) {  // 返回的角色信息在 route的 roles 中，表示有权限
-        return roles.some(role => route.meta.roles.includes(role))
-    } else {   // route 中不写 meta.roles 表示都有权限
+    if(route.roles) {  // 返回的角色信息在 route的 roles 中，表示有权限
+        return roles.some(role => route.roles.includes(role))
+    } else {   // route 中不写 roles 表示都有权限
         return true
     }
 }

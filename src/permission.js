@@ -1,7 +1,7 @@
 import router from './router';
 import store from './store';
 
-import { getToken } from '@/utils/token';
+import { getToken } from '@/libs/token';
 
 router.beforeEach(async (to, from, next) => {
     const token = getToken();

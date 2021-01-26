@@ -1,5 +1,5 @@
 import { message } from 'ant-design-vue';
-import { removeToken } from 'utils/token'
+import { removeToken } from '@/libs/token'
 import { loginOutActions } from '@/store/modules/user/reducer'
 import history from '@/router/history'
 
