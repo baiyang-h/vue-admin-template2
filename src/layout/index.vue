@@ -1,20 +1,20 @@
 <template>
   <a-layout id="components-layout-demo-custom-trigger">
 
-    <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible>
-      <div class="logo" />
-      <sidebar :collapsed="collapsed" />
-    </a-layout-sider>
+<!--    <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible>-->
+<!--      <div class="logo" />-->
+<!--      <sidebar :collapsed="collapsed" />-->
+<!--    </a-layout-sider>-->
 
     <a-layout>
 
       <a-layout-header>
-        <collapsed-icon :collapsed="collapsed" @update:collapsed="collapsed=$event" />
+<!--        <collapsed-icon :collapsed="collapsed" @update:collapsed="collapsed=$event" />-->
         <breadcrumb />
       </a-layout-header>
 
       <a-layout-content>
-        <app-main />
+<!--        <app-main />-->
       </a-layout-content>
 
     </a-layout>

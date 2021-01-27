@@ -1,22 +1,27 @@
 <template>
   <a-breadcrumb>
-    <a-breadcrumb-item>Home</a-breadcrumb-item>
-    <a-breadcrumb-item><a href="">Application Center</a></a-breadcrumb-item>
-    <a-breadcrumb-item><a href="">Application List</a></a-breadcrumb-item>
-    <a-breadcrumb-item>An Application</a-breadcrumb-item>
+    <a-breadcrumb-item @click="()=>$router.push('/')">
+      <home-outlined />
+    </a-breadcrumb-item>
+    <breadcrumb-item
+      v-for="route in levelList"
+      :key="route.path"
+      :route="route"
+    />
   </a-breadcrumb>
 </template>
 
 <script>
-import { getCurrentInstance } from 'vue';
+import { getCurrentInstance, ref, watch } from 'vue';
+import { HomeOutlined } from '@ant-design/icons-vue';
+import BreadcrumbItem from './breadcrumb-item';
 
 export default {
   name: "Breadcrumb",
 
-  data() {
-    return {
-      levelList: []
-    }
+  components: {
+    HomeOutlined,
+    BreadcrumbItem
   },
 
   watch: {
@@ -26,39 +31,42 @@ export default {
     }
   },
 
-  methods: {
-    getBreadcrumb() {
-      const { path } = this.$route;
-      const matched = this.$route.matched;
-      // 根据菜单标题， 得到会显示的菜单， 如果没标题，那就是有问题的。所以路由配置的时候，如果不是 Submenu 的话，记得 子children中path: index 中写明 meta.title
-      let levelList = matched.filter(route => route.meta && route.meta.title);
-      // 对于不是home的菜单，默认第一个是home
-      if(path !== '/home/index') {
-        levelList.unshift({
-          path: '/',
-          name: 'Home',
-          redirect: '/home',
-          meta: { title: '首页' }
-        })
+  setup() {
+    const { ctx } = getCurrentInstance();
+
+    const levelList = ref([])
+
+    function getBreadcrumb() {
+      const route = ctx.$router.currentRoute.value
+      const matched = route.matched;
+      if(route.name === 'Home') {
+        levelList.value = []
+      } else {
+        // 根据菜单标题， 得到会显示的菜单， 如果没标题，那就是有问题的。所以路由配置的时候，如果不是 Submenu 的话，记得 子children中path: index 中写明 meta.title
+        levelList.value = matched.filter(route => route.meta && route.meta.title);
       }
-
-      console.log(path, matched, levelList)
     }
-  }
 
-  // setup() {
-  //   const { ctx } = getCurrentInstance();
-  //   const route = ctx.$router.currentRoute.value
-  //   const matched = route.matched;
-  //
-  //   console.log(ctx, route)
-  // }
+    return {
+      levelList,
+      getBreadcrumb
+    }
+
+  }
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
   .ant-breadcrumb {
     display: flex;
     align-items: center;
+    // >>> 好像在 sass 中不解析，需要使用 ::v-deep 代替（别名） 或 /deep/，不过/deep/浏览器处理兼容有问题
+    >>> .ant-breadcrumb-link {
+      cursor: pointer;
+      background: orange;
+    }
+    ::v-deep .ant-breadcrumb-link {
+      cursor: pointer;
+    }
   }
 </style>
