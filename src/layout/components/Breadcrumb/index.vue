@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { getCurrentInstance, ref, watch } from 'vue';
+import { getCurrentInstance, ref } from 'vue';
 import { HomeOutlined } from '@ant-design/icons-vue';
 import BreadcrumbItem from './breadcrumb-item';
 
