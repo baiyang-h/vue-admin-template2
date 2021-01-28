@@ -1,15 +1,23 @@
 <template>
-  <div>
-    Navbar
+  <div class="navbar">
+    <breadcrumb />
   </div>
 </template>
 
 <script>
+import Breadcrumb  from './Breadcrumb'
 export default {
-  name: "Navbar"
+  name: "Navbar",
+
+  components: {
+    Breadcrumb
+  }
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+.navbar {
+  display: flex;
+  align-items: center;
+}
 </style>

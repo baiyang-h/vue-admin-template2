@@ -10,11 +10,24 @@ const modules = modulesFiles.keys().reduce((modules, modulePath) => {
   return modules;
 }, {});
 
+/**
+ * modules 的值，例如，如下：
+ * {
+ *    app: {
+ *      namespaced,
+ *      state,
+ *      mutations,
+ *      actions
+ *    },
+ *    user: {...},
+ *    permission: {...},
+ * }
+ */
+
 export default createStore({
   modules,
   getters
 })
-
 
 /*
  如果要调用的话

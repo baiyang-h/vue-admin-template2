@@ -9,13 +9,16 @@
     <a-layout>
 
       <a-layout-header>
-<!--        <collapsed-icon :collapsed="collapsed" @update:collapsed="collapsed=$event" />-->
-        <breadcrumb />
+<!--        <div class="navigation">-->
+<!--          <collapsed-icon :collapsed="collapsed" @update:collapsed="collapsed=$event" />-->
+<!--          <navbar />-->
+<!--        </div>-->
+        <tag-view />
       </a-layout-header>
 
-      <a-layout-content>
+<!--      <a-layout-content>-->
 <!--        <app-main />-->
-      </a-layout-content>
+<!--      </a-layout-content>-->
 
     </a-layout>
 
@@ -24,7 +27,7 @@
 
 <script>
 import { ref } from 'vue';
-import { Sidebar, CollapsedIcon, Breadcrumb, AppMain,  } from './components';
+import { Sidebar, CollapsedIcon, Navbar, TagView, AppMain  } from './components';
 
 export default {
 
@@ -33,7 +36,8 @@ export default {
   components: {
     Sidebar,
     CollapsedIcon,
-    Breadcrumb,
+    Navbar,
+    TagView,
     AppMain,
   },
 
@@ -60,9 +64,15 @@ export default {
   }
 
   .ant-layout-header {
-    display: flex;
     background: #fff;
     padding: 0;
+    height: 84px;
+    line-height: normal;
+    .navigation {
+      height: 50px;
+      line-height: 50px;
+      display: flex;
+    }
   }
 
   .ant-layout-content {

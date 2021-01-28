@@ -4,9 +4,9 @@
       <home-outlined />
     </a-breadcrumb-item>
     <breadcrumb-item
-      v-for="route in levelList"
-      :key="route.path"
-      :route="route"
+        v-for="route in levelList"
+        :key="route.path"
+        :route="route"
     />
   </a-breadcrumb>
 </template>

@@ -33,10 +33,11 @@ export default {
 
 <style scoped lang="scss">
 .collapsed {
+  display: flex;
+  align-items: center;
   .trigger {
     font-size: 18px;
-    line-height: 64px;
-    padding: 0 24px;
+    padding: 0 15px;
     cursor: pointer;
     transition: color 0.3s;
     &:hover {

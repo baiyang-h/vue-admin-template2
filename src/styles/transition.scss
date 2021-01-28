@@ -3,14 +3,10 @@
 .breadcrumb-leave-active {
   transition: all .5s;
 }
-
-.breadcrumb-enter,
-.breadcrumb-leave-active {
-  opacity: 0;
+.breadcrumb-enter-form,
+.breadcrumb-leave-to {
   transform: translateX(20px);
-}
-.breadcrumb-move {
-  transition: all .5s;
+  opacity: 0;
 }
 .breadcrumb-leave-active {
   position: absolute;
