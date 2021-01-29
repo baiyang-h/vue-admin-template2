@@ -1,11 +1,13 @@
 import router, { constantRoutes, appRoutes } from '@/router'
-import { filterAsyncRoutes, wrapFormatterMenu } from '@/libs/method'
+import { filterAsyncRoutes, wrapFormatterMenu, flatRoutes } from '@/libs/method'
 
 const state = {
     // 所有有访问权限的路由
     routes: [],
     // 有权限的应用路由
-    appRoutes: []
+    appRoutes: [],
+    // 拉平有权限的应用路由
+    flatAppRoutes: []
 };
 
 const mutations = {
@@ -14,6 +16,8 @@ const mutations = {
         state.appRoutes = appRoutes;
         // 权限路由+默认显示的路由
         state.routes = constantRoutes.concat(appRoutes);
+        // 拉平有权限appRoutes
+        state.flatAppRoutes = flatRoutes(appRoutes)
     },
 };
 

@@ -61,8 +61,8 @@ export function wrapFormatterRouter(routes, parentPath='/', parentRoles) {
  */
 export function wrapFormatterMenu(routes=[], roles) {
   const res = [];
-  // 该菜单即相关子菜单是否显示，关联有：权限、hidden属性
-  const isNeed = (route) => hasPermission(roles, route) && !route.hidden
+  // 该菜单即相关子菜单是否显示，关联有：权限、meta.hidden属性
+  const isNeed = (route) => hasPermission(roles, route) && !(route.meta && route.meta.hidden)
 
   // 对于没有 isSubmenu 的菜单，如果也写了 children 一层层的，我们来获取真正要显示的 menu
   const getOnlyLastRoute = (route) => {
@@ -87,7 +87,7 @@ export function wrapFormatterMenu(routes=[], roles) {
   }
 
   routes.forEach(route => {
-    // 1.有权限的路由  2. hidden 也是不隐藏的路由
+    // 1.有权限的路由  2. meta.hidden 也是不隐藏的路由
     if(isNeed(route)) {
       if(route.meta && route.meta.isSubmenu) {   // Submenu 有子菜单的菜单
         const tmp = {
@@ -97,7 +97,7 @@ export function wrapFormatterMenu(routes=[], roles) {
           meta: route.meta,
         };
         if(route.children && route.children.length) {
-          tmp.children = wrapFormatterMenu(tmp.children, roles)
+          tmp.children = wrapFormatterMenu(route.children, roles)
         }
         res.push(tmp)
       } else {
@@ -151,3 +151,19 @@ export function filterAsyncRoutes(routes, roles) {
   return res
 }
 
+/**
+ * @description   将路由拉平
+ * @param routes
+ * @returns {[]}  返回一个新的拉平后的数组
+ */
+export function flatRoutes(routes) {
+  let flatData = [];
+  routes.forEach(item => {
+    if(item.children) {
+      flatData = [...flatData, item, ...flatRoutes(item.children)]
+    } else {
+      flatData.push(item)
+    }
+  })
+  return flatData
+}

@@ -4,9 +4,11 @@ import Layout from '@/layout'
  * @description 说明
  * 直接定义在对象上，针对于应用路由
  * roles
- * hidden
  *
  * meta  定义在meta属性上，针对于菜单模块，因为必须是菜单模块才需要下面的属性
+ *  - title
+ *  - icon
+ *  - hidden  菜单模块隐藏/显示
  *  - noCache 不需要缓存，因为路由加了 keep-alive 所以会缓存。tagsView 中的缓存
  *  - affix: true  是否在 tagsView 中默认显示， 让首页默认显示
  *  - isSubmenu 是否是 Submenu 菜单，即有字菜单

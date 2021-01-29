@@ -7,10 +7,9 @@
       @click="clickMenuItem"
   >
     <sidebar-item
-      v-for="route in appRoutes"
-      :key="setBaseFullPathKey(route)"
-      :route="route"
-      :base-path="route.path"
+      v-for="menuItem in menu"
+      :key="menuItem.path"
+      :menuItem="menuItem"
     />
   </a-menu>
 </template>
@@ -40,9 +39,11 @@ export default {
     const store = useStore();
 
     // vuex 中有权限的菜单路由
-    const appRoutes = computed(() => store.getters.appRoutes)
+    const menu = computed(() => store.getters.menu)
 
-    let rootSubmenuKeys = ref(appRoutes.value.map(route => route.path));   // 根 submenu 所有的 keys
+    // 根 submenu 所有的 keys
+    // menu 是处理过的菜单，只有菜单信息， 只要有children，并且不是空数组，那么就是 submenu
+    let rootSubmenuKeys = ref(menu.value.filter(item => item.children && item.children.length).map(item => item.path));
     let selectedKeys = ref([]);     // 选中的keys
     let openKeys = ref([]);         // 展开的 submenu keys
     let preOpenKeys = ref([]);      // 前一个展开的 submenu keys
@@ -54,16 +55,6 @@ export default {
       // 初始化 默认 openKeys ， 默认有展开
       openKeys.value = route.matched.filter(_route => _route.meta && _route.meta.isSubmenu && _route.children.length).map(_route => _route.path)
     })
-
-    // 因为 ant-design-vue 中的selectedKeys如果没封装组件直接写在 a-sub-menu和a-menu-item是会根据写的得到，但如果你封装成了一个组件，会以组件的key为根据，所以即使你组件内部的a-sub-menu和a-menu-item 也是没用的
-    // -_-\\\ 一个小坑，
-    function setBaseFullPathKey(route) {
-      if(route.meta && route.meta.isSubmenu) {
-        return route.path
-      } else {
-        return route.redirect ? route.redirect : route.path
-      }
-    }
 
     // 展开 submenu， 只会展开一个 submenu
     // 这里有个坑， 如果想用这个方法来 只展开一个 submenu， 那么在 <a-menu> 上定义 @openChange="onOpenChange" 并且 v-model:openKeys 改为 :openKeys
@@ -102,12 +93,11 @@ export default {
     )
 
     return {
-      appRoutes,
+      menu,
       rootSubmenuKeys,
       selectedKeys,
       openKeys,
       preOpenKeys,
-      setBaseFullPathKey,
       onOpenChange,
       clickMenuItem,
     }

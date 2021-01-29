@@ -5,7 +5,6 @@ const state = {
 
 const mutations = {
     SET_MENU(state, menu) {
-        console.log('menu', menu)
         state.menu = menu
     }
 }
