@@ -1,17 +1,20 @@
 <template>
   <div class="tag-view">
-    <a-tag
-      v-for="tag in visitedViews"
-      :key="tag.path"
-      :closable="!(tag.meta && tag.meta.affix)"
-      :color="setEffectColor(tag)"
-      @click="onClick(tag)"
-      @contextmenu.prevent.native="onContextmenu(tag, $event)"
-      @close="onClose(tag)"
-    >
-      {{ tag.meta && tag.meta.title }}
-    </a-tag>
-
+    <div class="tags-scroll-container-hidden">
+      <div class="tags-scroll-container">
+        <a-tag
+            v-for="tag in visitedViews"
+            :key="tag.path"
+            :closable="!(tag.meta && tag.meta.affix)"
+            :color="setEffectColor(tag)"
+            @click="onClick(tag)"
+            @contextmenu.prevent.native="onContextmenu(tag, $event)"
+            @close="onClose(tag)"
+        >
+          {{ tag.meta && tag.meta.title }}
+        </a-tag>
+      </div>
+    </div>
     <!--  右键工具栏  -->
     <contextmenu
       v-show="visible"
@@ -221,6 +224,15 @@ export default {
   padding: 5px 10px 0;
   box-sizing: border-box;
   user-select:none;
+  white-space: nowrap;
+  .tags-scroll-container-hidden {
+    height: 100%;
+    overflow: hidden;
+  }
+  .tags-scroll-container {
+    height: 50px;
+    overflow-x: auto;
+  }
   .ant-tag-blue {
     background: #fff;
     >>> .anticon-close {
