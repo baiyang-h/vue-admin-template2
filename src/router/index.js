@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router'
 import ROUTE_CONFIG from './router.config'
 import { wrapFormatterRouter } from "@/libs/method";
 
@@ -13,7 +13,7 @@ export const constantRoutes = ROUTE_CONFIG.constantRoutes;
 // ]
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHashHistory(process.env.BASE_URL),
   routes: [...ROUTE_CONFIG.constantRoutes, ...ROUTE_CONFIG.appRoutes]
 })
 

@@ -3,29 +3,26 @@
 <!--    <transition name="fade-main" mode="out-in">-->
 <!--      -->
 <!--    </transition>-->
-    <keep-alive :include="['Cache']">
+    <keep-alive :include="cachedViews">
       <component :is="Component" />
     </keep-alive>
   </router-view>
 </template>
 
 <script>
-import { getCurrentInstance, computed } from 'vue';
+import { computed } from 'vue';
+import { useStore } from 'vuex';
 export default {
 
   name: "AppMain",
 
   setup() {
+    const store = useStore();
 
-    const { ctx } = getCurrentInstance();
-
-    const key = computed(() => {
-      console.log(ctx.$router.currentRoute.value.path)
-      return ctx.$router.currentRoute.value.path
-    })
+    const cachedViews = computed(() => store.getters.cachedViews)
 
     return {
-      key
+      cachedViews
     }
   }
 }

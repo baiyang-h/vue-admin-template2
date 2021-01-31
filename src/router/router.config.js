@@ -4,6 +4,8 @@ import Layout from '@/layout'
  * @description 说明
  * 直接定义在对象上，针对于应用路由
  * roles
+ * name   确保和菜单模块的组件内 name 名字一致（说明：下面注意事项3）
+ *
  *
  * meta  定义在meta属性上，针对于菜单模块，因为必须是菜单模块才需要下面的属性
  *  - title
@@ -18,6 +20,8 @@ import Layout from '@/layout'
  * 1. meta.isSubmenu: true 表示这是一个 Submenu，有子菜单，是一个可以展开的菜单
  * 2. 如果不是展开的菜单，根上，即有{ component: Layout } 这一层中不要写 meta.title， 对于菜单的描述，写到它的 children 中的 item.meta.title 中，
  *      因为在面包屑 Breadcrumb 中我们是根据 meta.title 来判断 matched 匹配的要显示的菜单层级
+ * 3. name属性   一定要要和组件内部的name名一致， 因为 keep-alive 的 include就是根据组件的 name，
+ *      而我们在 tagView 中会根据 route.name 来存储，所以他两要保持一致
  *
  */
 

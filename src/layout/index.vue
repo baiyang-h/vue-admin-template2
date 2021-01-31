@@ -1,24 +1,23 @@
 <template>
   <a-layout id="components-layout-demo-custom-trigger">
 
-<!--    <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible>-->
-<!--      <div class="logo" />-->
-<!--      <sidebar :collapsed="collapsed" />-->
-<!--    </a-layout-sider>-->
+    <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible>
+      <sidebar :collapsed="collapsed" />
+    </a-layout-sider>
 
     <a-layout>
 
       <a-layout-header>
-<!--        <div class="navigation">-->
-<!--          <collapsed-icon :collapsed="collapsed" @update:collapsed="collapsed=$event" />-->
-<!--          <navbar />-->
-<!--        </div>-->
+        <div class="navigation">
+          <collapsed-icon :collapsed="collapsed" @update:collapsed="collapsed=$event" />
+          <navbar />
+        </div>
         <tag-view />
       </a-layout-header>
 
-<!--      <a-layout-content>-->
-<!--        <app-main />-->
-<!--      </a-layout-content>-->
+      <a-layout-content>
+        <app-main />
+      </a-layout-content>
 
     </a-layout>
 
@@ -57,12 +56,6 @@ export default {
 #components-layout-demo-custom-trigger {
   height: 100%;
 
-  .logo {
-    height: 32px;
-    background: rgba(255, 255, 255, 0.2);
-    margin: 16px;
-  }
-
   .ant-layout-header {
     background: #fff;
     padding: 0;
@@ -73,6 +66,11 @@ export default {
       line-height: 50px;
       display: flex;
     }
+  }
+
+  .ant-layout-sider {
+    background: #fff;
+    overflow-y: auto;
   }
 
   .ant-layout-content {

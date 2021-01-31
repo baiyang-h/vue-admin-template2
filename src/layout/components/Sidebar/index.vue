@@ -1,6 +1,6 @@
 <template>
   <a-menu
-      theme="dark"
+      theme="light"
       mode="inline"
       v-model:openKeys="openKeys"
       v-model:selectedKeys="selectedKeys"

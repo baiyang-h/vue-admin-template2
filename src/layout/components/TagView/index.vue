@@ -1,14 +1,34 @@
 <template>
   <div class="tag-view">
-    <a-tag closable>Tag 1</a-tag>
-    <a-tag closable>Tag 1</a-tag>
-    <a-tag closable>Tag 1</a-tag>
+    <a-tag
+      v-for="tag in visitedViews"
+      :key="tag.path"
+      :closable="!(tag.meta && tag.meta.affix)"
+      :color="setEffectColor(tag)"
+      @click="onClick(tag)"
+      @contextmenu.prevent.native="onContextmenu(tag, $event)"
+      @close="onClose(tag)"
+    >
+      {{ tag.meta && tag.meta.title }}
+    </a-tag>
+
+    <!--  右键工具栏  -->
+    <contextmenu
+      v-show="visible"
+      :style="{ left: position.left, top: position.top }"
+      :selected="selected"
+      @refresh="onRefresh(selected)"
+      @close="onClose(selected)"
+      @closeOther="onCloseOther(selected)"
+      @closeAll="onCloseAll(selected)"
+    />
   </div>
 </template>
 
 <script>
-import { onMounted, computed, getCurrentInstance, watch } from 'vue'
+import { reactive, toRefs, onMounted, computed, getCurrentInstance, watch} from 'vue'
 import { useStore } from 'vuex'
+import contextmenu from './contextmenu'
 
 // 生成 tagView 数据
 function generateTagView(route) {
@@ -22,10 +42,25 @@ function generateTagView(route) {
 export default {
   name: "TagView",
 
+  components: {
+    contextmenu
+  },
+
   setup() {
     const store = useStore()
     const { ctx } = getCurrentInstance()
 
+    const state = reactive({
+      visible: false,
+      position: {
+        left: 0,
+        top: 0
+      },
+      selected: {}
+    })
+
+    // 显示的 tagViews
+    const visitedViews = computed(() => store.getters.visitedViews);
     // 拉平的应用路由 appRoutes
     const flatAppRoutes = computed(() => store.getters.flatAppRoutes)
 
@@ -34,7 +69,7 @@ export default {
       init()
     })
 
-    // 监听 $route 当前路由来 添加/处理化 tagView
+    // 监听 $route 当前路由来 添加/处理 tagView
     watch(
         () => ctx.$router.currentRoute.value,
         (val) => {
@@ -42,6 +77,19 @@ export default {
         }
     )
 
+    // 监听 contextmenu 的 visible，在打开工具栏时绑定事件，点击任意处时移除事件
+    watch(
+        () => state.visible,
+        (val) => {
+          if(val) {
+            document.body.addEventListener('click', closeMenu)
+          } else {
+            document.body.removeEventListener('click', closeMenu)
+          }
+        }
+    )
+
+    // 初始化
     function init() {
       // 得到是 route.cofig 中 mata.affix 为 true 的数组，即在tagViews中默认显示的 route
       const affixRoutes = filterAffixRoute(flatAppRoutes.value);
@@ -51,12 +99,18 @@ export default {
       })
       // 初始化的当前路由 tag 需要添加到缓存列表中
       const route = ctx.$router.currentRoute.value
-      store.dispatch('tagView/addCachedView', generateTagView(route));
+      if(route.name) {  // 缓存列表中保存的是 route.name  对应着组件内部的 name， 所以 route.name要和模块组件name 一致， 因为 keep-alive 的 include就是 组件的 name
+        store.dispatch('tagView/addView', generateTagView(route));
+      }
     }
 
     // 增加标签栏的 tagView
     function addView(tagRoute) {
-      store.dispatch('tagView/addView', tagRoute);
+      // 1.首先要有 name 属性，并且是和菜单组件的name一致，
+      // 2.tagView显示的路由必须是在 appRoute 菜单应用路由中的，不然如果直接修改url的形式改变路由，类似于 /login 这类也会显示了在 tagsView 中了，所以确保是 应用路由的 tagRoute
+      if(tagRoute.name && flatAppRoutes.value.some(route => route.path === tagRoute.path) ) {
+        store.dispatch('tagView/addView', tagRoute);
+      }
     }
 
     // 处理得到 tagViews 默认显示的 route，  以 meta.affix 为根据
@@ -70,16 +124,111 @@ export default {
       return affixRoutes
     }
 
+    // 设置tag的颜色主题
+    function setEffectColor(tagRoute) {
+      if(tagRoute.path === ctx.$router.currentRoute.value.path) {
+        return '#108ee9'
+      } else {
+        return 'blue'
+      }
+    }
 
+    // 点击标签
+    function onClick(tagRoute) {
+      if(tagRoute.path === ctx.$router.currentRoute.value.path) return;
+      ctx.$router.push(tagRoute.path)
+    }
+
+    // 右键点击 tag
+    function onContextmenu(tagRoute, e) {
+      const offsetLeft = e.target.getBoundingClientRect().left - ctx.$el.getBoundingClientRect().left
+      const offsetTop = e.target.getBoundingClientRect().top - ctx.$el.getBoundingClientRect().top;
+      const left = offsetLeft + e.offsetX + 'px';
+      const top = offsetTop + e.offsetY + 'px';
+
+      state.position = {
+        left,
+        top
+      }
+      state.visible = true
+      state.selected = tagRoute
+    }
+
+    // 关闭 contextmenu 工具栏
+    function closeMenu() {
+      state.visible = false;
+      state.selected = {};
+    }
+
+    // 刷新
+    function onRefresh(selected) {
+      store.dispatch('tagView/delCachedView', selected)
+      const path = '/redirect' + selected.path;   // /redirect/:path(.*) 中存在路由重定向，首先跳到该路径，然后在重定向
+      ctx.$router.push({ path })
+    }
+
+    // 关闭单个标签
+    function onClose(tagRoute) {
+      store.dispatch('tagView/delView', tagRoute).then(({ visitedViews }) => {
+        // 删除的view和当前路由一致，则重定向到删除后的最后一个。否则保持在当前页面，关闭要关闭的tag
+        if(tagRoute.path === ctx.$router.currentRoute.value.path) {
+          const lastRoute = visitedViews[visitedViews.length-1];
+          ctx.$router.push(lastRoute.path);
+        } else {
+          return false;
+        }
+      })
+    }
+
+    // 关闭其他标签
+    function onCloseOther(tagRoute) {
+      store.dispatch('tagView/delOthersViews', tagRoute)
+      if(tagRoute.path === ctx.$router.currentRoute.value.path) {
+        return false
+      } else {
+        ctx.$router.push(tagRoute.path)
+      }
+    }
+
+    // 关闭所有标签
+    function onCloseAll() {
+      store.dispatch('tagView/delAllViews').then(({ visitedViews }) => {
+        const lastPath = visitedViews[visitedViews.length-1]
+        ctx.$router.push(lastPath ? lastPath : '/')
+      })
+    }
+
+    return {
+      ...toRefs(state),
+      visitedViews,
+      setEffectColor,
+      onClick,
+      onContextmenu,
+      onRefresh,
+      onClose,
+      onCloseOther,
+      onCloseAll,
+    }
   }
 }
 </script>
 
 <style scoped lang="scss">
 .tag-view {
+  position: relative;
   height: 34px;
   box-shadow: 0 1px 3px 0 rgb(0 0 0 / 12%), 0 0 3px 0 rgb(0 0 0 / 4%);
   padding: 5px 10px 0;
   box-sizing: border-box;
+  user-select:none;
+  .ant-tag-blue {
+    background: #fff;
+    >>> .anticon-close {
+      color: #1890ff;
+    }
+    ::v-deep .anticon-close {
+      color: #1890ff;
+    }
+  }
 }
 </style>
