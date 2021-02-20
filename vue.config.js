@@ -28,6 +28,14 @@ module.exports = {
     },
 
     devServer: {
-        before: require('./mock/mock-server')
+        before: require('./mock/mock-server'),
+
+        proxy: {
+            '/food': {
+                target: 'http://10.100.49.141:4000',
+                ws: true,
+                changeOrigin: true,
+            },
+        }
     }
 }

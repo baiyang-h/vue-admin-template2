@@ -78,6 +78,8 @@ export default {
     padding: 24px;
     background: #fff;
     min-height: 280px;
+    overflow-y: auto;
+    box-sizing: border-box;
   }
 
 }

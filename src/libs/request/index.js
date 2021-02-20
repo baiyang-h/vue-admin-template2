@@ -16,9 +16,9 @@ const service = axios.create({
     // baseURL: process.env.REACT_APP_A,    // url = base url + request url
     timeout: 10000,
     headers: {
-        post: {
-            "Content-Type": "application/json;charset=UTF-8",
-        },
+        // application/json;charset=UTF-8
+        // application/x-www-form-urlencoded
+        'content-type': 'application/json;charset=UTF-8'
     },
 });
 
