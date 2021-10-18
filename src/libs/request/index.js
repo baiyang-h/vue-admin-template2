@@ -1,7 +1,6 @@
 import axios from "axios";
 // import errorHandle from './error'
 
-console.log(process.env);
 /*
 if (process.env.NODE_ENV == 'development') {
   axios.defaults.baseURL = 'https://www.baidu.com';}

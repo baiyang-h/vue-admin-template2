@@ -1,6 +1,8 @@
 const path = require('path');
 module.exports = {
 
+    // publicPath: 'BASE_URL - 会和 vue.config.js 中的 publicPath 选项相符，即你的应用会部署到的基础路径',
+
     lintOnSave: false,
 
     css: {
@@ -23,6 +25,7 @@ module.exports = {
                 router: path.resolve(__dirname, './src/router'),
                 libs: path.resolve(__dirname, './src/libs'),
                 views: path.resolve(__dirname, './src/views'),
+                config: path.resolve(__dirname, './src/config'),
             },
         },
     },
