@@ -9,8 +9,12 @@
 
       <a-layout-header>
         <div class="navigation">
-          <collapsed-icon :collapsed="collapsed" @update:collapsed="collapsed=$event" />
-          <navbar />
+          <div class="flex">
+            <collapsed-icon :collapsed="collapsed" @update:collapsed="collapsed=$event" />
+            <navbar />
+          </div>
+          <div></div>
+          <div><a-button type="link" @click="leave">离开</a-button></div>
         </div>
         <tag-view />
       </a-layout-header>
@@ -47,6 +51,21 @@ export default {
     return {
       collapsed,
     }
+  },
+
+  methods: {
+    leave() {
+      this.$confirm({
+        title: '标题',
+        content: '你确定要离开吗？',
+        onOk() {
+          return new Promise((resolve, reject) => {
+            resolve()
+          }).catch(() => console.log('Oops errors!'));
+        },
+        onCancel() {},
+      });
+    }
   }
 
 };
@@ -65,6 +84,7 @@ export default {
       height: 50px;
       line-height: 50px;
       display: flex;
+      justify-content: space-between;
     }
   }
 

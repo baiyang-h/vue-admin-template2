@@ -32,8 +32,14 @@ const actions = {
         }
         commit('SET_ROUTES', accessedRoutes);
         commit('app/SET_MENU', wrapFormatterMenu(accessedRoutes, roles), { root: true });
-
-        // TODO 这句话好像有问题， 所以路由暂时先写死，后面在看 vur-router api， 4.x版本 去掉了addRoutes 这个api
+        //  vur-router api， 4.x版本 去掉了addRoutes 这个api，改用 router.addRoute 了
+        /**
+         * TODO 因为调用该函数是在当我进入 router.beforeEach 前的时候， 此时 router 其实还没 addRoute 相应的路由。在开发的过程中遇到一个问题
+         * 在 addRoute() 之后第一次访问被添加的路由会白屏，这是因为刚刚 addRoutes() 就立刻访问被添加的路由，然而此时 addRoute() 没有执行结束，
+         * 因而找不到刚刚被添加的路由导致白屏。因此需要从新访问一次路由才行。
+         * 此时就要使用next({...to, replace: true}) 来确保 addRoute() 时动态添加的路由已经被完全加载上去。
+         * replace: true 只是一个设置信息，告诉Vue本次操作后，不能通过浏览器后退按钮，返回前一个路由。确保用户在 addRoute() 还没完成的时候，不可以点击浏览器回退按钮。
+         */
         accessedRoutes.forEach(route => {
             router.addRoute(route)
         })

@@ -19,7 +19,7 @@ router.beforeEach(async (to, from, next) => {
                     const roles = await store.dispatch('user/getInfo', token)
                     // 通过用户信息，用户权限，生成新的有权限的路由
                     await store.dispatch('permission/generateRoutes', roles);
-                    next()
+                    next({...to, replace: true})
                 } catch (e) {
                     console.log(e)
                 }

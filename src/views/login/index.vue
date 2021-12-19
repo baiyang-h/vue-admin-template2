@@ -22,8 +22,9 @@
 </template>
 
 <script>
-import { reactive, getCurrentInstance } from 'vue';
+import { reactive } from 'vue';
 import { useStore } from 'vuex';
+import { useRouter, useRoute } from 'vue-router'
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
 import {message} from "ant-design-vue";
 
@@ -34,8 +35,9 @@ export default {
     LockOutlined,
   },
   setup() {
-    const { ctx } = getCurrentInstance();
     const store = useStore();
+    const router = useRouter()
+    const route = useRoute()
 
     const formInline = reactive({
       username: 'admin',
@@ -54,7 +56,9 @@ export default {
     async function onSubmit() {
       try {
         await store.dispatch('user/login', formInline);
-        ctx.$router.push('/');
+        const { redirect } = route.query
+        console.log(redirect)
+        router.push(redirect ? redirect : '/');
       } catch (e) {
         message.error(e)
       }

@@ -24,7 +24,7 @@ export function wrapFormatterRouter(routes, parentPath='/', parentRoles) {
     const result = {
       ...item,
       path,
-      roles: item.roles || parentRoles,
+      roles: item.roles ? (parentRoles ? [...item.roles, ...parentRoles] : item.roles) : parentRoles,
     };
 
     if (item.children) {
