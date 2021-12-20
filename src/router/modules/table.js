@@ -2,6 +2,7 @@ import Layout from '@/layout'
 
 export default {
     path: '/table',
+    name: '_Table',
     redirect: '/table/index',
     component: Layout,
     children: [

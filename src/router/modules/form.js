@@ -2,6 +2,7 @@ import Layout from '@/layout'
 
 export default {
     path: '/form',
+    name: '_Form',
     redirect: '/form/index',
     component: Layout,
     children: [

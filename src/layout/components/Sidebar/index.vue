@@ -16,7 +16,8 @@
 
 <script>
 import { useStore } from 'vuex'
-import { computed, ref, watch, getCurrentInstance, onMounted } from "vue";
+import { useRoute, useRouter } from 'vue-router'
+import { computed, ref, watch, onMounted } from "vue";
 import SidebarItem from './sidebar-item';
 
 export default {
@@ -35,7 +36,8 @@ export default {
 
   setup(props) {
 
-    const { ctx } = getCurrentInstance();
+    const router = useRouter()
+    const route = useRoute()
     const store = useStore();
 
     // vuex 中有权限的菜单路由
@@ -49,11 +51,10 @@ export default {
     let preOpenKeys = ref([]);      // 前一个展开的 submenu keys
 
     onMounted(() => {
-      const route = ctx.$router.currentRoute.value;
       // 初始 默认 selectedKeys ， 默认选中的
       selectedKeys.value = [route.path];
       // 初始化 默认 openKeys ， 默认有展开
-      openKeys.value = route.matched.filter(_route => _route.meta && _route.meta.isSubmenu && _route.children.length).map(_route => _route.path)
+      openKeys.value = getRouteOpenKeys()
     })
 
     // 展开 submenu， 只会展开一个 submenu
@@ -69,7 +70,12 @@ export default {
 
     // 点击 MenuItem
     function clickMenuItem(e) {
-      ctx.$router.push(e.key);
+      router.push(e.key);
+    }
+
+    // 切换或者刷新、浏览器前进回退、tags切换，根路由变化，左侧菜单展开合拢
+    function getRouteOpenKeys() {
+      return route.matched.filter(_route => _route.meta && _route.meta.isSubmenu && _route.children.length).map(_route => _route.path)
     }
 
     // 监听 openKeys 用于保存上一次的 openKeys
@@ -89,6 +95,13 @@ export default {
           } else {
             openKeys.value = preOpenKeys.value
           }
+        }
+    )
+
+    watch(
+        () => route.path,
+        (val) => {
+          selectedKeys.value = [val]
         }
     )
 

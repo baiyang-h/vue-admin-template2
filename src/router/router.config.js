@@ -34,6 +34,7 @@ import cacheRouter from './modules/cache'
 const constantRoutes = [
     {
         path: '/',
+        name: 'App',
         component: Layout,
         redirect: '/home',
     },
@@ -44,6 +45,7 @@ const constantRoutes = [
     },
     {
         path: '/redirect',
+        name: '_Redirect',
         component: Layout,
         children: [
             {
@@ -63,6 +65,7 @@ const constantRoutes = [
 const appRoutes = [
     {
         path: '/home',
+        name: '_Home',
         redirect: '/home/index',
         component: Layout,
         children: [

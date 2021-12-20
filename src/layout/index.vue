@@ -29,8 +29,11 @@
 </template>
 
 <script>
+import {useStore} from 'vuex';
 import { ref } from 'vue';
 import { Sidebar, CollapsedIcon, Navbar, TagView, AppMain  } from './components';
+import { Modal } from 'ant-design-vue'
+import {useRouter} from "vue-router";
 
 export default {
 
@@ -45,29 +48,32 @@ export default {
   },
 
   setup() {
-
+    const store = useStore();
     let collapsed = ref(false);
+    const router = useRouter()
 
-    return {
-      collapsed,
-    }
-  },
-
-  methods: {
-    leave() {
-      this.$confirm({
+    function leave() {
+      Modal.confirm({
         title: '标题',
         content: '你确定要离开吗？',
         onOk() {
-          return new Promise((resolve, reject) => {
+          return new Promise((resolve) => {
+            store.dispatch('app/leave')
+            router.push({
+              name: 'Login'
+            })
             resolve()
-          }).catch(() => console.log('Oops errors!'));
+          }).catch((e) => console.log(e));
         },
         onCancel() {},
       });
     }
-  }
 
+    return {
+      collapsed,
+      leave
+    }
+  },
 };
 </script>
 

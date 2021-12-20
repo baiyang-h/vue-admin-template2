@@ -12,9 +12,10 @@
 </template>
 
 <script>
-import { getCurrentInstance, ref } from 'vue';
+import { ref } from 'vue';
 import { HomeOutlined } from '@ant-design/icons-vue';
 import BreadcrumbItem from './breadcrumb-item';
+import {useRoute} from "vue-router";
 
 export default {
   name: "Breadcrumb",
@@ -32,12 +33,11 @@ export default {
   },
 
   setup() {
-    const { ctx } = getCurrentInstance();
+    const route = useRoute()
 
     const levelList = ref([])
 
     function getBreadcrumb() {
-      const route = ctx.$router.currentRoute.value
       const matched = route.matched;
       if(route.name === 'Home') {
         levelList.value = []

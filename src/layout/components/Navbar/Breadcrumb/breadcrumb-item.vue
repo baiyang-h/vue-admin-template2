@@ -15,8 +15,8 @@
 </template>
 
 <script>
-import { getCurrentInstance } from 'vue';
 import { isUrl } from "@/libs/common/regexp";
+import {useRouter} from "vue-router";
 
 export default {
   name: "BreadcrumbItem",
@@ -29,14 +29,13 @@ export default {
   },
 
   setup() {
-
-    const { ctx } = getCurrentInstance();
+    const router = useRouter()
 
     function onLink(route) {
       if(isUrl(route.path)) {  // 如果是网页地址
         window.open(route.path)
       } else {
-        ctx.$router.push(route.path)
+        router.push(route.path)
       }
     }
 

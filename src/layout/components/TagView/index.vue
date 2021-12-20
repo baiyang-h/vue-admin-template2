@@ -32,6 +32,7 @@
 import { reactive, toRefs, onMounted, computed, getCurrentInstance, watch} from 'vue'
 import { useStore } from 'vuex'
 import contextmenu from './contextmenu'
+import {useRoute, useRouter} from "vue-router";
 
 // 生成 tagView 数据
 function generateTagView(route) {
@@ -52,6 +53,8 @@ export default {
   setup() {
     const store = useStore()
     const { ctx } = getCurrentInstance()
+    const router = useRouter()
+    const route = useRoute()
 
     const state = reactive({
       visible: false,
@@ -74,9 +77,9 @@ export default {
 
     // 监听 $route 当前路由来 添加/处理 tagView
     watch(
-        () => ctx.$router.currentRoute.value,
-        (val) => {
-          addView(generateTagView(val))
+        () => route.path,
+        () => {
+          addView(generateTagView(route))
         }
     )
 
@@ -101,7 +104,6 @@ export default {
         store.dispatch('tagView/addVisitedView', tagRoute);
       })
       // 初始化的当前路由 tag 需要添加到缓存列表中
-      const route = ctx.$router.currentRoute.value
       if(route.name) {  // 缓存列表中保存的是 route.name  对应着组件内部的 name， 所以 route.name要和模块组件name 一致， 因为 keep-alive 的 include就是 组件的 name
         store.dispatch('tagView/addView', generateTagView(route));
       }
@@ -129,7 +131,7 @@ export default {
 
     // 设置tag的颜色主题
     function setEffectColor(tagRoute) {
-      if(tagRoute.path === ctx.$router.currentRoute.value.path) {
+      if(tagRoute.path === route.path) {
         return '#108ee9'
       } else {
         return 'blue'
@@ -138,8 +140,8 @@ export default {
 
     // 点击标签
     function onClick(tagRoute) {
-      if(tagRoute.path === ctx.$router.currentRoute.value.path) return;
-      ctx.$router.push(tagRoute.path)
+      if(tagRoute.path === route.path) return;
+      router.push(tagRoute.path)
     }
 
     // 右键点击 tag
@@ -167,16 +169,16 @@ export default {
     function onRefresh(selected) {
       store.dispatch('tagView/delCachedView', selected)
       const path = '/redirect' + selected.path;   // /redirect/:path(.*) 中存在路由重定向，首先跳到该路径，然后在重定向
-      ctx.$router.push({ path })
+      router.push({ path })
     }
 
     // 关闭单个标签
     function onClose(tagRoute) {
       store.dispatch('tagView/delView', tagRoute).then(({ visitedViews }) => {
         // 删除的view和当前路由一致，则重定向到删除后的最后一个。否则保持在当前页面，关闭要关闭的tag
-        if(tagRoute.path === ctx.$router.currentRoute.value.path) {
+        if(tagRoute.path === route.path) {
           const lastRoute = visitedViews[visitedViews.length-1];
-          ctx.$router.push(lastRoute.path);
+          router.push(lastRoute.path);
         } else {
           return false;
         }
@@ -186,10 +188,10 @@ export default {
     // 关闭其他标签
     function onCloseOther(tagRoute) {
       store.dispatch('tagView/delOthersViews', tagRoute)
-      if(tagRoute.path === ctx.$router.currentRoute.value.path) {
+      if(tagRoute.path === route.path) {
         return false
       } else {
-        ctx.$router.push(tagRoute.path)
+        router.push(tagRoute.path)
       }
     }
 
@@ -197,7 +199,7 @@ export default {
     function onCloseAll() {
       store.dispatch('tagView/delAllViews').then(({ visitedViews }) => {
         const lastPath = visitedViews[visitedViews.length-1]
-        ctx.$router.push(lastPath ? lastPath : '/')
+        router.push(lastPath ? lastPath : '/')
       })
     }
 

@@ -2,6 +2,7 @@ import Layout from '@/layout'
 
 export default {
     path: '/cache',
+    name: '_Cache',
     redirect: '/cache/index',
     component: Layout,
     children: [
