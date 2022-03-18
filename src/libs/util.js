@@ -20,7 +20,7 @@ export const download = function (url, name) {
 // 因此我们可以使用 转为 canvas 的方法。但是也要注意 兼容性问题
 
 /**
- * 主要原理：利用a标签的download属性以及canvas的toDataURL()
+ * 主要原理：利用a标签的download属性以及canvas的toDataURL() 下载图片
  * @param selector   图片的选择器
  * @param name       被下载图片的命名
  * @param type       图片类型
@@ -43,8 +43,8 @@ export const downloadPicture = (url, name, type='image/png') => {
     // 生成一个a元素
     let a = document.createElement('a')
 
-    // 将a的download属性设置为我们想要下载的图片名称，若name不存在则使用‘下载图片名称’作为默认名称
-    a.download = name || '下载图片名称'
+    // 将a的download属性设置为我们想要下载的图片名称，若name不存在则使用‘下载图片’作为默认名称
+    a.download = name || '下载图片'
     // 将生成的URL设置为a.href属性
     a.href = _url
     // 点击
@@ -369,4 +369,24 @@ export const colorToRGB = (val, opa) => {
   rgbStr = rgbArr.join();
   rgbStr = 'rgb' + (isOpa ? 'a' : '') + '(' + rgbStr + (isOpa ? ',' + opa : '') + ')';
   return rgbStr;
+}
+
+// 文本复制
+// 选择： 1. 原生js  2. npm install vue-clipboard2  下载 vue-clipboard2 包
+export const copy = (text) => {
+  return new Promise((resolve, reject) => {
+    try {
+      let input  = document.createElement('input');
+      input.value = text //修改文本框的内容
+
+      document.body.appendChild(input);
+      input.select(); // 选中文本
+      document.execCommand("copy");
+      document.body.removeChild(input);
+      resolve()
+    } catch (e) {
+      reject(e)
+    }
+  })
+
 }
