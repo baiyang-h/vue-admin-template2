@@ -30,6 +30,7 @@ import tableRouter from './modules/table';
 import formRouter from './modules/form'
 import nestedRouter from './modules/nested';
 import cacheRouter from './modules/cache'
+import UtilRouter from './modules/util'
 
 const constantRoutes = [
     {
@@ -114,7 +115,8 @@ const appRoutes = [
     tableRouter,
     formRouter,
     nestedRouter,
-    cacheRouter
+    cacheRouter,
+    UtilRouter
 ]
 
 export default {

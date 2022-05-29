@@ -77,3 +77,13 @@ export const isUndef = (v) => {
 export const isDef = (v) => {
   return v !== undefined && v !== null
 }
+
+// 判断给定变量是否是原始类型值，即：string、number、boolean以及 symbol
+export const isPrimitive  = (value) => {
+  return (
+      typeof value === 'string' ||
+      typeof value === 'number' ||
+      typeof value === 'symbol' ||
+      typeof value === 'boolean'
+  )
+}
